@@ -34,6 +34,10 @@ public class UtenteService {
 
 		// controllo se l'utente è gia presente
 		if(u1 == null) {
+			// set attivo e isAdmin
+			u.setAttivo(true);
+			u.setIsAdmin(false);
+			
 			// inserisco l'utente
 			utenteRepo.save(u);
 			// restituisco lo status

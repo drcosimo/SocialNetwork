@@ -27,7 +27,7 @@ public class Post {
 	
 	// un post è pubblicato da un solo utente
 	@ManyToOne
-	@JoinColumn(name = "posts")
+	@JoinColumn(name = "utente")
 	private Utente utente = null;
 	
 	// like
