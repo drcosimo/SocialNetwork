@@ -209,18 +209,24 @@ public class PostService {
 
 		// controllo che il post esiste e che l'utente sia il proprietario
 		if(p != null && p.getUtente().getId() == u.getId()) {
+			//contatore; controllo che almeno uno dei due campi (titolo, testo) sia cambiato
+			boolean cambiato=false;
 			// aggiorno il post
 			// se il campo in entrata è vuoto non lo aggiorno
 			if(!pp.getTitolo().equals("")) {
 				p.setTitolo(pp.getTitolo());
+				cambiato=true;
 			}
 			// se il campo in entrata è vuoto non lo aggiorno
 			if(!pp.getTesto().equals("")) {
 				p.setTesto(pp.getTesto());
+				cambiato=true;
 			}
+			//aggiorno ora dell'ultimo aggiornamento
+			p.setAggiornamento(LocalDateTime.now());
 
 			// effettuo l'aggiornamento sul db
-			postRepo.save(p);
+			//postRepo.save(p);
 
 			return HttpStatus.OK;
 		}else {
@@ -239,7 +245,8 @@ public class PostService {
 		if(u.getIsAdmin() || p.getUtente().getId() == u.getId()) {
 			// elimino il post logicamente(attivo = 0)
 			p.setAttivo(false);
-			postRepo.save(p);
+
+			//postRepo.save(p);
 
 			return HttpStatus.OK;
 		}else {
@@ -253,29 +260,66 @@ public class PostService {
 
 		// ottengo il riferimento al post
 		Post p = postRepo.getPostById(pd.getId());
-		
+
 		// controllo che l'utente possa mettere like
-		if(u.getId() != p.getUtente().getId() && !(p.getMiPiace().contains(u))) {
+		if(u.getId() != p.getUtente().getId() && !(u.getLiked().contains(p))) {
 			// controllo la presenza nei non mi piace
-			if(p.getNonMiPiace().contains(u)) {
+			if(u.getDisliked().contains(p)) {
 				// elimino il non mi piace
-				p.getNonMiPiace().remove(u);
+				u.getDisliked().remove(p);
 				// decremento il numero dei non mi piace
 				p.setNumDislike(p.getNumDislike()-1);
 			}
-			
+
 			// aggiungo l'utente alla lista dei mi piace
-			p.getMiPiace().add(u);
-			
+			//p.getMiPiace().add(u);
+			u.getLiked().add(p);
+
 			// incremento il contatore dei like
 			p.setNumLike(p.getNumLike()+1);
-			
+
 			// aggiorno il db
-			postRepo.save(p);
-			
+			//postRepo.save(p);
+			//utenteRepo.save(u);
+
+			return HttpStatus.OK;
+		}else {
+
+			return HttpStatus.BAD_REQUEST;
+		}
+
+	}
+	public HttpStatus mettiDislike(PostDTO pd) throws Exception{
+		// ottengo il riferimento all'utente
+		Utente u = utenteRepo.getByNicknameAndPassword(pd.getNickname(), pd.getPassword());
+
+		// ottengo il riferimento al post
+		Post p = postRepo.getPostById(pd.getId());
+
+		// controllo che l'utente possa mettere dislike
+		if(u.getId() != p.getUtente().getId() && !(u.getDisliked().contains(p))) {
+			// controllo la presenza nei mi piace
+			if(u.getLiked().contains(p)) {
+				// elimino il mi piace
+				u.getLiked().remove(p);
+				// decremento il numero dei mi piace
+				p.setNumLike(p.getNumLike()-1);
+			}
+
+			// aggiungo l'utente alla lista dei non mi piace
+			//p.getNonMiPiace().add(u);
+			u.getDisliked().add(p);
+
+			// incremento il contatore dei dislike
+			p.setNumDislike(p.getNumDislike()+1);
+
+			// aggiorno il db
+			//postRepo.save(p);
+
 			return HttpStatus.OK;
 		}else {
 			return HttpStatus.BAD_REQUEST;
 		}
+
 	}
 }

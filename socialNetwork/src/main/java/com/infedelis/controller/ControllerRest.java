@@ -208,7 +208,7 @@ public class ControllerRest {
 	}
 
 	@DeleteMapping(path ="/eliminaPost")
-	public HttpStatus eliminaPost(PostDTO dp) {
+	public HttpStatus eliminaPost(@RequestBody PostDTO dp) {
 		try {
 			// validazione utente
 			HttpStatus status = utenteService.login(dp.getNickname(), dp.getPassword());
@@ -226,13 +226,31 @@ public class ControllerRest {
 	}
 	
 	@PostMapping(path = "/miPiace")
-	public HttpStatus miPiace(PostDTO pd) {
+	public HttpStatus miPiace(@RequestBody PostDTO pd) {
+		try {
+			// validazione utente
+			HttpStatus status = utenteService.login(pd.getNickname(), pd.getPassword());
+			System.out.println();
+			if(status == HttpStatus.OK) {
+				return postService.mettiLike(pd);
+			}else {
+				return HttpStatus.BAD_REQUEST;
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			return HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+	}
+	
+	@PostMapping(path = "/nonMiPiace")
+	public HttpStatus nonMiPiace(@RequestBody PostDTO pd) {
 		try {
 			// validazione utente
 			HttpStatus status = utenteService.login(pd.getNickname(), pd.getPassword());
 			
 			if(status == HttpStatus.OK) {
-				return postService.mettiLike(pd);
+				return postService.mettiDislike(pd);
 			}else {
 				return HttpStatus.BAD_REQUEST;
 			}
