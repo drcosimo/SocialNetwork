@@ -1,7 +1,6 @@
 package com.infedelis.service;
 
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.infedelis.model.PostDTO;
 import com.infedelis.model.NewPost;
+import com.infedelis.model.PatchPost;
 import com.infedelis.model.Post;
 import com.infedelis.model.PostInRange;
 import com.infedelis.model.SearchPost;
@@ -67,7 +68,7 @@ public class PostService {
 
 			for(Post p : posts) {
 				postDaRestituire.add(
-						new VisualizePost(p.getTitolo(),p.getTesto(),p.getCreazione(),p.getAggiornamento(),p.getNumLike(), p.getNumDislike(),p.getUtente().getNickname()));
+						new VisualizePost(p.getId(),p.getTitolo(),p.getTesto(),p.getCreazione(),p.getAggiornamento(),p.getNumLike(), p.getNumDislike(),p.getUtente().getNickname()));
 			}
 
 			return new ResponseEntity<List<VisualizePost>>(postDaRestituire, HttpStatus.OK);
@@ -92,7 +93,7 @@ public class PostService {
 
 			for(Post p : posts) {
 				postDaRestituire.add(
-						new VisualizePost(p.getTitolo(),p.getTesto(),p.getCreazione(),p.getAggiornamento(),p.getNumLike(), p.getNumDislike(),u.getNickname()));
+						new VisualizePost(p.getId(),p.getTitolo(),p.getTesto(),p.getCreazione(),p.getAggiornamento(),p.getNumLike(), p.getNumDislike(),u.getNickname()));
 			}
 
 			return new ResponseEntity<List<VisualizePost>>(postDaRestituire, HttpStatus.OK);
@@ -116,7 +117,7 @@ public class PostService {
 
 			for(Post p : posts) {
 				postDaRestituire.add(
-						new VisualizePost(p.getTitolo(),p.getTesto(),p.getCreazione(),p.getAggiornamento(),p.getNumLike(), p.getNumDislike(),p.getUtente().getNickname()));
+						new VisualizePost(p.getId(),p.getTitolo(),p.getTesto(),p.getCreazione(),p.getAggiornamento(),p.getNumLike(), p.getNumDislike(),p.getUtente().getNickname()));
 			}
 
 			// restituisco la lista di post insieme al messaggio OK
@@ -127,7 +128,7 @@ public class PostService {
 		}
 	}
 
-	public ResponseEntity<List<VisualizePost>> vediPostInRangeUtente(PostInRange pr){
+	public ResponseEntity<List<VisualizePost>> vediPostInRangeUtente(PostInRange pr) throws Exception{
 		// ottengo il riferimento all'utente
 		Utente u = utenteRepo.getByNicknameAndPassword(pr.getNickname(), pr.getPassword());
 
@@ -141,7 +142,7 @@ public class PostService {
 
 			for(Post p : posts) {
 				postDaRestituire.add(
-						new VisualizePost(p.getTitolo(),p.getTesto(),p.getCreazione(),p.getAggiornamento(),p.getNumLike(), p.getNumDislike(),p.getUtente().getNickname()));
+						new VisualizePost(p.getId(),p.getTitolo(),p.getTesto(),p.getCreazione(),p.getAggiornamento(),p.getNumLike(), p.getNumDislike(),p.getUtente().getNickname()));
 			}
 
 			// restituisco la lista di post insieme al messaggio OK
@@ -152,7 +153,7 @@ public class PostService {
 		}
 	}
 
-	public ResponseEntity<List<VisualizePost>> cercaTitoloTestoInPost(String titolo, String testo){
+	public ResponseEntity<List<VisualizePost>> cercaTitoloTestoInPost(String titolo, String testo) throws Exception{
 		// ottengo la lista dei post che contengono parole specificate nel titolo o testo
 		List<Post> posts = (List<Post>) postRepo.findByTitoloContainsOrTestoContains(titolo, testo);
 
@@ -163,7 +164,7 @@ public class PostService {
 
 			for(Post p : posts) {
 				postDaRestituire.add(
-						new VisualizePost(p.getTitolo(),p.getTesto(),p.getCreazione(),p.getAggiornamento(),p.getNumLike(), p.getNumDislike(),p.getUtente().getNickname()));
+						new VisualizePost(p.getId(),p.getTitolo(),p.getTesto(),p.getCreazione(),p.getAggiornamento(),p.getNumLike(), p.getNumDislike(),p.getUtente().getNickname()));
 			}
 
 			// restituisco la lista di post insieme al messaggio OK
@@ -174,10 +175,10 @@ public class PostService {
 		}
 	}
 
-	public ResponseEntity<List<VisualizePost>> cercaTitoloTestoInPostUtente(SearchPost sp){
+	public ResponseEntity<List<VisualizePost>> cercaTitoloTestoInPostUtente(SearchPost sp) throws Exception{
 		// ottengo il riferimento all'utente
 		Utente u = utenteRepo.getByNicknameAndPassword(sp.getNickname(), sp.getPassword());
-		
+
 		// ottengo la lista dei post che contengono parole specificate nel titolo o testo appartenenti all'utente
 		List<Post> posts = (List<Post>) postRepo.getPostUtenteContenenteParole(u, sp.getTitolo(),sp.getTesto());
 
@@ -188,7 +189,7 @@ public class PostService {
 
 			for(Post p : posts) {
 				postDaRestituire.add(
-						new VisualizePost(p.getTitolo(),p.getTesto(),p.getCreazione(),p.getAggiornamento(),p.getNumLike(), p.getNumDislike(),p.getUtente().getNickname()));
+						new VisualizePost(p.getId(),p.getTitolo(),p.getTesto(),p.getCreazione(),p.getAggiornamento(),p.getNumLike(), p.getNumDislike(),p.getUtente().getNickname()));
 			}
 
 			// restituisco la lista di post insieme al messaggio OK
@@ -197,6 +198,84 @@ public class PostService {
 			// altrimenti not found
 			return new ResponseEntity<List<VisualizePost>>(HttpStatus.NOT_FOUND);
 		}
+	}
 
+	public HttpStatus modificaPost(PatchPost pp) throws Exception{
+		// ottengo il riferimento all'utente
+		Utente u = utenteRepo.getByNicknameAndPassword(pp.getNickname(), pp.getPassword());
+
+		// ottengo il riferimento al post
+		Post p = postRepo.getPostById(pp.getId());
+
+		// controllo che il post esiste e che l'utente sia il proprietario
+		if(p != null && p.getUtente().getId() == u.getId()) {
+			// aggiorno il post
+			// se il campo in entrata è vuoto non lo aggiorno
+			if(!pp.getTitolo().equals("")) {
+				p.setTitolo(pp.getTitolo());
+			}
+			// se il campo in entrata è vuoto non lo aggiorno
+			if(!pp.getTesto().equals("")) {
+				p.setTesto(pp.getTesto());
+			}
+
+			// effettuo l'aggiornamento sul db
+			postRepo.save(p);
+
+			return HttpStatus.OK;
+		}else {
+			return HttpStatus.BAD_REQUEST;
+		}
+	}
+
+	public HttpStatus eliminaPost(PostDTO dp) throws Exception{
+		// ottengo il riferimento all'utente
+		Utente u = utenteRepo.getByNicknameAndPassword(dp.getNickname(), dp.getPassword());
+
+		// ottengo il riferimento al post
+		Post p = postRepo.getPostById(dp.getId());
+
+		// controllo permessi di eliminazione
+		if(u.getIsAdmin() || p.getUtente().getId() == u.getId()) {
+			// elimino il post logicamente(attivo = 0)
+			p.setAttivo(false);
+			postRepo.save(p);
+
+			return HttpStatus.OK;
+		}else {
+			return HttpStatus.BAD_REQUEST;
+		}
+	}
+
+	public HttpStatus mettiLike(PostDTO pd) throws Exception{
+		// ottengo il riferimento all'utente
+		Utente u = utenteRepo.getByNicknameAndPassword(pd.getNickname(), pd.getPassword());
+
+		// ottengo il riferimento al post
+		Post p = postRepo.getPostById(pd.getId());
+		
+		// controllo che l'utente possa mettere like
+		if(u.getId() != p.getUtente().getId() && !(p.getMiPiace().contains(u))) {
+			// controllo la presenza nei non mi piace
+			if(p.getNonMiPiace().contains(u)) {
+				// elimino il non mi piace
+				p.getNonMiPiace().remove(u);
+				// decremento il numero dei non mi piace
+				p.setNumDislike(p.getNumDislike()-1);
+			}
+			
+			// aggiungo l'utente alla lista dei mi piace
+			p.getMiPiace().add(u);
+			
+			// incremento il contatore dei like
+			p.setNumLike(p.getNumLike()+1);
+			
+			// aggiorno il db
+			postRepo.save(p);
+			
+			return HttpStatus.OK;
+		}else {
+			return HttpStatus.BAD_REQUEST;
+		}
 	}
 }

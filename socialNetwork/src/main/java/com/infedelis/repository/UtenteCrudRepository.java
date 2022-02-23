@@ -1,13 +1,13 @@
 package com.infedelis.repository;
 
-import java.util.List;
-
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
-import com.infedelis.model.Post;
 import com.infedelis.model.Utente;
 
 public interface UtenteCrudRepository extends CrudRepository<Utente, Integer> {
 
-	public Utente getByNicknameAndPassword(String username, String password);
+	@Query("select u from Utente u where u.nickname=:n and u.password=:p and u.attivo=1")
+	public Utente getByNicknameAndPassword(@Param("n") String nickname, @Param("p")String password);
 }

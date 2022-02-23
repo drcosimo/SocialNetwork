@@ -3,6 +3,13 @@ package com.infedelis.model;
 import java.time.LocalDateTime;
 
 public class VisualizePost {
+	private Integer id;
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	private String titolo;
 	private String testo;
 	private LocalDateTime creazione;
@@ -10,9 +17,10 @@ public class VisualizePost {
 	private Integer numLike;
 	private Integer numDislike;
 	private String nicknameOwner;
-	public VisualizePost(String titolo, String testo, LocalDateTime creazione, LocalDateTime aggiornamento,
+	public VisualizePost(Integer id,String titolo, String testo, LocalDateTime creazione, LocalDateTime aggiornamento,
 			Integer numLike, Integer numDislike, String nicknameOwner) {
 		super();
+		this.id = id;
 		this.titolo = titolo;
 		this.testo = testo;
 		this.creazione = creazione;

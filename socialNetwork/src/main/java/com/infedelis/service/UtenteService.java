@@ -17,8 +17,8 @@ public class UtenteService {
 
 
 	// metodo di login
-	public HttpStatus login(String username, String password) throws Exception{
-		Utente u = utenteRepo.getByNicknameAndPassword(username,password);
+	public HttpStatus login(String nickname, String password) throws Exception{
+		Utente u = utenteRepo.getByNicknameAndPassword(nickname,password);
 
 		if(u != null ) {
 			return HttpStatus.OK;

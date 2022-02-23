@@ -6,15 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.infedelis.model.NewPost;
-import com.infedelis.model.Post;
+import com.infedelis.model.PatchPost;
+import com.infedelis.model.PostDTO;
 import com.infedelis.model.PostInRange;
 import com.infedelis.model.SearchPost;
 import com.infedelis.model.Utente;
@@ -23,7 +24,7 @@ import com.infedelis.service.PostService;
 import com.infedelis.service.UtenteService;
 
 @RestController
-@RequestMapping(path = "", produces = "application/json")
+@RequestMapping(path = "", produces = "application/json", consumes = "application/json")
 @CrossOrigin(origins = "*")
 
 public class ControllerRest {
@@ -35,7 +36,7 @@ public class ControllerRest {
 
 
 	// metodo di login
-	@PostMapping(path = "/login", consumes = "application/json")
+	@PostMapping(path = "/login")
 	public HttpStatus login(@RequestBody Utente u) {
 		try {
 			return utenteService.login(u.getNickname(),u.getPassword());
@@ -46,7 +47,7 @@ public class ControllerRest {
 	}
 
 	// metodo di registrazione
-	@PostMapping(path = "/registrazione", consumes = "application/json")
+	@PostMapping(path = "/registrazione")
 	public HttpStatus registra(@RequestBody Utente u) {
 		try {
 			return utenteService.registra(u);
@@ -56,7 +57,7 @@ public class ControllerRest {
 		}
 	}
 
-	@PostMapping(path = "/creaPost", consumes = "application/json")
+	@PostMapping(path = "/creaPost")
 	public HttpStatus creaPost(@RequestBody NewPost np) {
 		try {
 			// controllo login
@@ -188,4 +189,57 @@ public class ControllerRest {
 		}
 	}
 
+	@PatchMapping(path = "/modificaPost", consumes = "application/json")
+	public HttpStatus modificaPost(@RequestBody PatchPost pp) {
+		try {
+			// controllo login
+			HttpStatus status = utenteService.login(pp.getNickname(),pp.getPassword());
+
+			if(status == HttpStatus.OK) {
+				return postService.modificaPost(pp);
+			}else {
+				return HttpStatus.BAD_REQUEST;
+			}
+
+		}catch(Exception e) {
+			e.printStackTrace();
+			return HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+	}
+
+	@DeleteMapping(path ="/eliminaPost")
+	public HttpStatus eliminaPost(PostDTO dp) {
+		try {
+			// validazione utente
+			HttpStatus status = utenteService.login(dp.getNickname(), dp.getPassword());
+			
+			if(status == HttpStatus.OK) {
+				return postService.eliminaPost(dp);
+			}else {
+				return HttpStatus.BAD_REQUEST;
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			return HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+	}
+	
+	@PostMapping(path = "/miPiace")
+	public HttpStatus miPiace(PostDTO pd) {
+		try {
+			// validazione utente
+			HttpStatus status = utenteService.login(pd.getNickname(), pd.getPassword());
+			
+			if(status == HttpStatus.OK) {
+				return postService.mettiLike(pd);
+			}else {
+				return HttpStatus.BAD_REQUEST;
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			return HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+	}
 }

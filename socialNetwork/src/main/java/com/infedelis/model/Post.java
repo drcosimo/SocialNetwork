@@ -1,6 +1,5 @@
 package com.infedelis.model;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
-import org.springframework.lang.NonNull;
 
 @Entity
 public class Post {

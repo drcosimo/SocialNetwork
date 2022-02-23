@@ -1,8 +1,8 @@
 package com.infedelis.model;
 
-import java.sql.Date;
 import java.util.List;
-
+import java.util.Objects;
+import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-
-import org.springframework.lang.NonNull;
 
 import javax.persistence.JoinColumn;
 
@@ -65,8 +63,6 @@ public class Utente {
 	public Utente() {
 		
 	}
-
-
 	public Integer getId() {
 		return id;
 	}
@@ -185,6 +181,19 @@ public class Utente {
 	public void setDisliked(List<Post> disliked) {
 		this.disliked = disliked;
 	}
-
-	
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Utente other = (Utente) obj;
+		return Objects.equals(id, other.id);
+	}
 }
