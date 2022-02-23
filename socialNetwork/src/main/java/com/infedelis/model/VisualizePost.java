@@ -1,19 +1,17 @@
 package com.infedelis.model;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class VisualizePost {
 	private String titolo;
 	private String testo;
-	private Date creazione;
-	private Date aggiornamento;
+	private LocalDateTime creazione;
+	private LocalDateTime aggiornamento;
 	private Integer numLike;
 	private Integer numDislike;
 	private String nicknameOwner;
-	
-	
-	public VisualizePost(String titolo, String testo, Date creazione, Date aggiornamento, Integer numLike,
-			Integer numDislike, String nicknameOwner) {
+	public VisualizePost(String titolo, String testo, LocalDateTime creazione, LocalDateTime aggiornamento,
+			Integer numLike, Integer numDislike, String nicknameOwner) {
 		super();
 		this.titolo = titolo;
 		this.testo = testo;
@@ -35,16 +33,16 @@ public class VisualizePost {
 	public void setTesto(String testo) {
 		this.testo = testo;
 	}
-	public Date getCreazione() {
+	public LocalDateTime getCreazione() {
 		return creazione;
 	}
-	public void setCreazione(Date creazione) {
+	public void setCreazione(LocalDateTime creazione) {
 		this.creazione = creazione;
 	}
-	public Date getAggiornamento() {
+	public LocalDateTime getAggiornamento() {
 		return aggiornamento;
 	}
-	public void setAggiornamento(Date aggiornamento) {
+	public void setAggiornamento(LocalDateTime aggiornamento) {
 		this.aggiornamento = aggiornamento;
 	}
 	public Integer getNumLike() {
@@ -66,5 +64,6 @@ public class VisualizePost {
 		this.nicknameOwner = nicknameOwner;
 	}
 	
+		
 	
 }

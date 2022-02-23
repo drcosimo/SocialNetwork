@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.infedelis.model.NewPost;
 import com.infedelis.model.Post;
+import com.infedelis.model.PostInRange;
+import com.infedelis.model.SearchPost;
 import com.infedelis.model.Utente;
 import com.infedelis.model.VisualizePost;
 import com.infedelis.service.PostService;
@@ -89,7 +91,7 @@ public class ControllerRest {
 			return new ResponseEntity<List<VisualizePost>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@PostMapping(path = "/vediPostUtente")
 	public ResponseEntity<List<VisualizePost>> vediPostUtente(@RequestBody Utente u){
 		try {
@@ -105,6 +107,84 @@ public class ControllerRest {
 		}catch(Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<List<VisualizePost>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@PostMapping(path = "/vediPostInRange")
+	public ResponseEntity<List<VisualizePost>> vediPostInRange(@RequestBody PostInRange p){
+		try {
+			// controllo login
+			HttpStatus status = utenteService.login(p.getNickname(), p.getPassword());
+
+			// utente autenticato
+			if(status == HttpStatus.OK) {
+				return postService.vediPostInRange(p.getDataInizio(), p.getDataFine());
+			}else {
+				return new ResponseEntity<List<VisualizePost>>(HttpStatus.BAD_REQUEST);
+			}
+
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<VisualizePost>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
+	@PostMapping(path = "/vediPostInRangeUtente")
+	public ResponseEntity<List<VisualizePost>> vediPostInRangeUtente(@RequestBody PostInRange p){
+		try {
+			// controllo login
+			HttpStatus status = utenteService.login(p.getNickname(), p.getPassword());
+
+			// utente autenticato
+			if(status == HttpStatus.OK) {
+				return postService.vediPostInRangeUtente(p);
+			}else {
+				return new ResponseEntity<List<VisualizePost>>(HttpStatus.BAD_REQUEST);
+			}
+
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<VisualizePost>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
+	@PostMapping(path = "/cercaTitoloTestoInPost")
+	public ResponseEntity<List<VisualizePost>> cercaTitoloTestoInPost(@RequestBody SearchPost sp){
+		try {
+			// controllo login
+			HttpStatus status = utenteService.login(sp.getNickname(), sp.getPassword());
+
+			// utente autenticato
+			if(status == HttpStatus.OK) {
+				return postService.cercaTitoloTestoInPost(sp.getTitolo(),sp.getTesto());
+			}else {
+				return new ResponseEntity<List<VisualizePost>>(HttpStatus.BAD_REQUEST);
+			}
+
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<VisualizePost>>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PostMapping(path = "/cercaTitoloTestoInPostUtente")
+	public ResponseEntity<List<VisualizePost>> cercaTitoloTestoInPostUtente(@RequestBody SearchPost sp){
+		try {
+			// controllo login
+			HttpStatus status = utenteService.login(sp.getNickname(), sp.getPassword());
+
+			// utente autenticato
+			if(status == HttpStatus.OK) {
+				return postService.cercaTitoloTestoInPostUtente(sp);
+			}else {
+				return new ResponseEntity<List<VisualizePost>>(HttpStatus.BAD_REQUEST);
+			}
+
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<VisualizePost>>(HttpStatus.BAD_REQUEST);
 		}
 	}
 

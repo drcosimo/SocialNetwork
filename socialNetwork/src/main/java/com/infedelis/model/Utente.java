@@ -3,6 +3,7 @@ package com.infedelis.model;
 import java.sql.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+
+import org.springframework.lang.NonNull;
+
 import javax.persistence.JoinColumn;
 
 
@@ -18,14 +22,21 @@ public class Utente {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+	@Column(nullable = false)
 	private String nickname;
+	@Column(nullable = false)
 	private String nome;
+	@Column(nullable = false)
 	private String cognome;
+	@Column(nullable = false)
 	private String email;
+	@Column(nullable = false)
 	private String password;
+	@Column(nullable = false)
 	private Date dataNascita;
+	@Column(nullable = false)
 	private Boolean attivo;
+	@Column(nullable = false)
 	private Boolean isAdmin;
 	
 	// utente pubblica uno o piu post

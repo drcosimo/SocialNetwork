@@ -1,8 +1,10 @@
 package com.infedelis.model;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,21 +13,31 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import org.springframework.lang.NonNull;
+
 @Entity
 public class Post {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@Column(nullable = false)
 	private String titolo;
+	@Column(nullable = false)
 	private String testo;
-	private Date creazione;
-	private Date aggiornamento;
+	@Column(nullable = false)
+	private LocalDateTime creazione;
+	@Column(nullable = false)
+	private LocalDateTime aggiornamento;
+	@Column(nullable = false)
 	private Integer numLike;
+	@Column(nullable = false)
 	private Integer numDislike;
+	@Column(nullable = false)
 	private Boolean attivo;
 	
 	// un post è pubblicato da un solo utente
+	
 	@ManyToOne
 	@JoinColumn(name = "utente")
 	private Utente utente = null;
@@ -66,20 +78,22 @@ public class Post {
 		this.testo = testo;
 	}
 
-	public Date getCreazione() {
+
+	
+	public LocalDateTime getCreazione() {
 		return creazione;
 	}
 
-	public void setCreazione(Date creazione) {
-		this.creazione = creazione;
-	}
-
-	public Date getAggiornamento() {
+	public LocalDateTime getAggiornamento() {
 		return aggiornamento;
 	}
 
-	public void setAggiornamento(Date aggiornamento) {
+	public void setAggiornamento(LocalDateTime aggiornamento) {
 		this.aggiornamento = aggiornamento;
+	}
+
+	public void setCreazione(LocalDateTime creazione) {
+		this.creazione = creazione;
 	}
 
 	public Integer getNumLike() {
