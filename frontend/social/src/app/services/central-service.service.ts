@@ -1,6 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
+import { Post } from 'src/post';
+import { User } from 'src/user';
+import { StringDecoder } from 'string_decoder';
 
 @Injectable({
   providedIn: 'root'
@@ -8,10 +11,6 @@ import { Observable, tap } from 'rxjs';
 export class CentralServiceService {
 
   constructor(private http:HttpClient) { }
-
-  getPost(): Observable<[]>{
-    return this.http.post<[]>('http://localhost:8080/',{},{responseType:"json"});
-  }
 
   // placeholder per l'utente
   user :{
@@ -23,11 +22,21 @@ export class CentralServiceService {
   };
 
   login(cred : { email:string,password:string}){
-    return this.http.post('http://localhost:8080/login', cred).pipe(
-      tap((data) =>{
-        this.user.email = cred.email;
-        this.user.password = cred.password;
-      })
-    );
+    return this.http.post<User>('http://localhost:8080/login', cred, {observe:"response"});
+  }
+
+  // salvo le credenziali
+  setUser(user:User|null){
+    if(user != null){
+      this.user.email = user.email;
+      this.user.password = user.password;
+    }
+  }
+  // get di tutti i post
+  getPost(){
+
+    const bodyReq = {"nickname": this.user.email, "password": this.user.password}
+
+    return this.http.post<Post []>('http://localhost:8080/',bodyReq,{observe:"response"});
   }
 }
