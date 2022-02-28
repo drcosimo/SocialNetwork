@@ -2,7 +2,6 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { stringify } from 'querystring';
 import { User } from 'src/user';
 import { CentralServiceService } from '../services/central-service.service';
 
@@ -19,7 +18,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.formLogin = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
+      nickname: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required)
     });
   }
@@ -27,7 +26,7 @@ export class LoginComponent implements OnInit {
   login() {
     // salvo le credenziali dal form  
     const cred = {
-      email: this.formLogin.get('email')?.value,
+      nickname: this.formLogin.get('nickname')?.value,
       password: this.formLogin.get('password')?.value
     }
     // effettuo la richiesta al servizio rest per la validazione delle credenziali
@@ -35,15 +34,13 @@ export class LoginComponent implements OnInit {
       response => { 
         // se il login avviene con successo
         if (response.status == 200) {
-          // salvo le credenziali
-          this.service.setUser(response.body);
-
           // accedo alla homepage
-          this.router.navigateByUrl('homepage');
+          this.router.navigateByUrl('private');
         // altrimenti messaggio di errore
         } else {
           this.errore = "credenziali invalide";
         }
+        
       }
     );
   }

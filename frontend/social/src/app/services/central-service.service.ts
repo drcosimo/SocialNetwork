@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { Post } from 'src/post';
 import { User } from 'src/user';
-import { StringDecoder } from 'string_decoder';
 
 @Injectable({
   providedIn: 'root'
@@ -13,30 +12,29 @@ export class CentralServiceService {
   constructor(private http:HttpClient) { }
 
   // placeholder per l'utente
-  user :{
-    email: string,
-    password: string
-  } = {
-    email : '',
+  user :User= {
+     nickname : '',
     password : ''
   };
 
-  login(cred : { email:string,password:string}){
+  login(cred : User){
+    // salvo le credenziali
+    this.setUser(cred);
     return this.http.post<User>('http://localhost:8080/login', cred, {observe:"response"});
   }
 
   // salvo le credenziali
   setUser(user:User|null){
     if(user != null){
-      this.user.email = user.email;
+      this.user.nickname = user.nickname;
       this.user.password = user.password;
     }
   }
-  // get di tutti i post
+
+  // ottengo tutti i post
   getPost(){
+    const bodyReq = {"nickname": this.user.nickname, "password": this.user.password};
 
-    const bodyReq = {"nickname": this.user.email, "password": this.user.password}
-
-    return this.http.post<Post []>('http://localhost:8080/',bodyReq,{observe:"response"});
+    return this.http.post<Post []>('http://localhost:8080/vediTuttiPost',bodyReq,{observe:"response"});
   }
 }

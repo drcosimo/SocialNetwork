@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="col-md-12 col-lg-12">
+        <div *ngFor="let post of posts">
+            <article class="post vt-post">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-4">
+                        <div class="post-type post-img"></div>
+                        <div class="author-info author-info-2">
+                            <ul class="list-inline">
+                                <li>
+                                    <div class="info">
+                                        <p>Posted on:</p>
+                                        <strong>{{post.creazione}}</strong>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
+                        <div class="caption">
+                            <h3 class="md-heading"><p>{{post.titolo}}</p></h3>
+                            <p> {{post.testo}}</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            </div>
+        </div>
+    </div>

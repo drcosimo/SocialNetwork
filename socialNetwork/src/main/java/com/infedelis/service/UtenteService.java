@@ -23,6 +23,8 @@ public class UtenteService {
 		Utente u = utenteRepo.getByNicknameAndPassword(nickname,password);
 		if(u != null ) {
 			VisualizeUtente vu=new VisualizeUtente(u.getNickname(), u.getNome(), u.getCognome(), u.getEmail(), u.getDataNascita());
+			System.out.println(HttpStatus.OK);
+			
 			return new ResponseEntity<VisualizeUtente>(vu, HttpStatus.OK);
 		}else {
 			return new ResponseEntity<VisualizeUtente>(HttpStatus.BAD_REQUEST);

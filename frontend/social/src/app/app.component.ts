@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Post } from 'src/post';
 import { CentralServiceService } from './services/central-service.service';
 
 @Component({
@@ -8,10 +9,7 @@ import { CentralServiceService } from './services/central-service.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  posts: {
-    id : number,
-    title: string
-  }[] = [];
+  posts: Post[] = [];
 
   private getSub !: Subscription;
 
@@ -19,21 +17,5 @@ export class AppComponent {
   }
 
   ngOnInit(): void{
-  }
-
-  download():void{
-    this.getSub = this.central.getPost().subscribe(
-      // salvo i dati quando vengono ottenuti dalla chiamata
-      (data) => {
-        this.posts = data;
-      }
-    );
-  }
-
-  ngOnDestroy(): void{
-    // mi disiscrivo dal metodo per rilevare memoria
-    if(this.getSub){
-      this.getSub.unsubscribe();
-    }
   }
 }

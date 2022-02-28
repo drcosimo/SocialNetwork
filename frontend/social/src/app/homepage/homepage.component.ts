@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { Post } from 'src/post';
 import { CentralServiceService } from '../services/central-service.service';
 
@@ -13,18 +14,10 @@ export class HomepageComponent implements OnInit {
 
   // lista di post
   posts: Post[] = [];
-
+  getSub!: Subscription;
 
   ngOnInit(): void {
-    this.service.getPost().subscribe(
-      response => {
-        if (response.status == 200) {
-          if(response.body != null){
-           
-          }
-        }
-      }
-    );
   }
-
+  ngOnDestroy(): void{
+  }
 }
