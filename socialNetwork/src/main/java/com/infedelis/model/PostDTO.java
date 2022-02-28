@@ -1,9 +1,10 @@
 package com.infedelis.model;
 
 public class PostDTO {
-	private Integer id;
-	private String nickname;
-	private String password;
+	
+	private Integer id;  //id del post
+	private String nickname; //rif utente
+	private String password; //dell'utente
 	public PostDTO(Integer id, String nickname, String password) {
 		super();
 		this.id = id;

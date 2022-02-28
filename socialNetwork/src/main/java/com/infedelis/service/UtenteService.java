@@ -3,10 +3,12 @@ package com.infedelis.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.infedelis.model.Utente;
+import com.infedelis.model.VisualizeUtente;
 import com.infedelis.repository.UtenteCrudRepository;
 
 @Service("Utente")
@@ -17,18 +19,18 @@ public class UtenteService {
 
 
 	// metodo di login
-	public HttpStatus login(String nickname, String password) throws Exception{
+	public ResponseEntity<VisualizeUtente> login(String nickname, String password) throws Exception{
 		Utente u = utenteRepo.getByNicknameAndPassword(nickname,password);
-
 		if(u != null ) {
-			return HttpStatus.OK;
+			VisualizeUtente vu=new VisualizeUtente(u.getNickname(), u.getNome(), u.getCognome(), u.getEmail(), u.getDataNascita());
+			return new ResponseEntity<VisualizeUtente>(vu, HttpStatus.OK);
 		}else {
-			return HttpStatus.BAD_REQUEST;
+			return new ResponseEntity<VisualizeUtente>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	// metodo di registrazione
-	public HttpStatus registra(Utente u) throws Exception{
+	public ResponseEntity<VisualizeUtente> registra(Utente u) throws Exception{
 		// controllo presenza utente
 		Utente u1 = utenteRepo.getByNicknameAndPassword(u.getNickname(), u.getPassword());
 
@@ -41,9 +43,11 @@ public class UtenteService {
 			// inserisco l'utente
 			utenteRepo.save(u);
 			// restituisco lo status
-			return HttpStatus.CREATED;
+			VisualizeUtente vu=new VisualizeUtente(u.getNickname(), u.getNome(), u.getCognome(), u.getEmail(), u.getDataNascita());
+
+			return new ResponseEntity<VisualizeUtente>(vu, HttpStatus.CREATED);
 		}else {
-			return HttpStatus.BAD_REQUEST;
+			return new ResponseEntity<VisualizeUtente>(HttpStatus.BAD_REQUEST);
 		}
 	}
 }

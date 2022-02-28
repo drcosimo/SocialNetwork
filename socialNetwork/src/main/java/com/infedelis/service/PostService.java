@@ -31,7 +31,7 @@ public class PostService {
 	@Autowired
 	private UtenteCrudRepository utenteRepo;
 
-	public HttpStatus creaPost(NewPost np) throws Exception {
+	public ResponseEntity<VisualizePost> creaPost(NewPost np) throws Exception {
 		// ottengo il riferimento dal db dell' utente
 		Utente u = utenteRepo.getByNicknameAndPassword(np.getNickname(), np.getPassword());
 
@@ -53,7 +53,9 @@ public class PostService {
 		postRepo.save(p);
 
 		// post creato
-		return HttpStatus.CREATED;
+		
+		VisualizePost vp=new VisualizePost(p.getId(), p.getTitolo(), p.getTesto(), p.getCreazione(), p.getAggiornamento(), p.getNumLike(), p.getNumDislike(), p.getUtente().getNickname());
+		return new ResponseEntity<VisualizePost>(vp, HttpStatus.CREATED);
 	}
 
 	public ResponseEntity<List<VisualizePost>> vediTuttiPost() throws Exception{
@@ -200,7 +202,7 @@ public class PostService {
 		}
 	}
 
-	public HttpStatus modificaPost(PatchPost pp) throws Exception{
+	public ResponseEntity<VisualizePost> modificaPost(PatchPost pp) throws Exception{
 		// ottengo il riferimento all'utente
 		Utente u = utenteRepo.getByNicknameAndPassword(pp.getNickname(), pp.getPassword());
 
@@ -227,14 +229,14 @@ public class PostService {
 
 			// effettuo l'aggiornamento sul db
 			//postRepo.save(p);
-
-			return HttpStatus.OK;
+			VisualizePost vp=new VisualizePost(p.getId(), p.getTitolo(), p.getTesto(), p.getCreazione(), p.getAggiornamento(), p.getNumLike(), p.getNumDislike(), p.getUtente().getNickname());
+			return new ResponseEntity<VisualizePost>(vp, HttpStatus.OK);
 		}else {
-			return HttpStatus.BAD_REQUEST;
+			return new ResponseEntity<VisualizePost>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
-	public HttpStatus eliminaPost(PostDTO dp) throws Exception{
+	public ResponseEntity<VisualizePost> eliminaPost(PostDTO dp) throws Exception{
 		// ottengo il riferimento all'utente
 		Utente u = utenteRepo.getByNicknameAndPassword(dp.getNickname(), dp.getPassword());
 
@@ -247,14 +249,14 @@ public class PostService {
 			p.setAttivo(false);
 
 			//postRepo.save(p);
-
-			return HttpStatus.OK;
+			VisualizePost vp=new VisualizePost(p.getId(), p.getTitolo(), p.getTesto(), p.getCreazione(), p.getAggiornamento(), p.getNumLike(), p.getNumDislike(), p.getUtente().getNickname());
+			return new ResponseEntity<VisualizePost>(vp, HttpStatus.OK);
 		}else {
-			return HttpStatus.BAD_REQUEST;
+			return new ResponseEntity<VisualizePost>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
-	public HttpStatus mettiLike(PostDTO pd) throws Exception{
+	public ResponseEntity<VisualizePost> mettiLike(PostDTO pd) throws Exception{
 		// ottengo il riferimento all'utente
 		Utente u = utenteRepo.getByNicknameAndPassword(pd.getNickname(), pd.getPassword());
 
@@ -281,15 +283,14 @@ public class PostService {
 			// aggiorno il db
 			//postRepo.save(p);
 			//utenteRepo.save(u);
-
-			return HttpStatus.OK;
+			VisualizePost vp=new VisualizePost(p.getId(), p.getTitolo(), p.getTesto(), p.getCreazione(), p.getAggiornamento(), p.getNumLike(), p.getNumDislike(), p.getUtente().getNickname());
+			return new ResponseEntity<VisualizePost>(vp, HttpStatus.OK);
 		}else {
-
-			return HttpStatus.BAD_REQUEST;
+			return new ResponseEntity<VisualizePost>(HttpStatus.BAD_REQUEST);
 		}
 
 	}
-	public HttpStatus mettiDislike(PostDTO pd) throws Exception{
+	public ResponseEntity<VisualizePost> mettiDislike(PostDTO pd) throws Exception{
 		// ottengo il riferimento all'utente
 		Utente u = utenteRepo.getByNicknameAndPassword(pd.getNickname(), pd.getPassword());
 
@@ -316,9 +317,10 @@ public class PostService {
 			// aggiorno il db
 			//postRepo.save(p);
 
-			return HttpStatus.OK;
+			VisualizePost vp=new VisualizePost(p.getId(), p.getTitolo(), p.getTesto(), p.getCreazione(), p.getAggiornamento(), p.getNumLike(), p.getNumDislike(), p.getUtente().getNickname());
+			return new ResponseEntity<VisualizePost>(vp, HttpStatus.OK);
 		}else {
-			return HttpStatus.BAD_REQUEST;
+			return new ResponseEntity<VisualizePost>(HttpStatus.BAD_REQUEST);
 		}
 
 	}

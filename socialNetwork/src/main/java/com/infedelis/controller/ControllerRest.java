@@ -20,6 +20,7 @@ import com.infedelis.model.PostInRange;
 import com.infedelis.model.SearchPost;
 import com.infedelis.model.Utente;
 import com.infedelis.model.VisualizePost;
+import com.infedelis.model.VisualizeUtente;
 import com.infedelis.service.PostService;
 import com.infedelis.service.UtenteService;
 
@@ -37,41 +38,40 @@ public class ControllerRest {
 
 	// metodo di login
 	@PostMapping(path = "/login")
-	public HttpStatus login(@RequestBody Utente u) {
+	public ResponseEntity<VisualizeUtente> login(@RequestBody Utente u) {
 		try {
 			return utenteService.login(u.getNickname(),u.getPassword());
 		}catch(Exception e) {
 			e.printStackTrace();
-			return HttpStatus.INTERNAL_SERVER_ERROR;
+			return new ResponseEntity<VisualizeUtente>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	// metodo di registrazione
 	@PostMapping(path = "/registrazione")
-	public HttpStatus registra(@RequestBody Utente u) {
+	public ResponseEntity<VisualizeUtente> registra(@RequestBody Utente u) {
 		try {
 			return utenteService.registra(u);
 		}catch(Exception e) {
 			e.printStackTrace();
-			return HttpStatus.INTERNAL_SERVER_ERROR;
+			return new ResponseEntity<VisualizeUtente>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@PostMapping(path = "/creaPost")
-	public HttpStatus creaPost(@RequestBody NewPost np) {
+	public ResponseEntity<VisualizePost> creaPost(@RequestBody NewPost np) {
 		try {
 			// controllo login
-			HttpStatus status = utenteService.login(np.getNickname(), np.getPassword());
-
-			// utente autenticato
-			if(status == HttpStatus.OK) {
+			
+			if(utenteService.login(np.getNickname(), np.getPassword()).getStatusCode() == HttpStatus.OK) {
+				// utente autenticato
 				return postService.creaPost(np);
 			}else {
-				return status;
+				return new ResponseEntity<VisualizePost>(HttpStatus.BAD_REQUEST);
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
-			return HttpStatus.INTERNAL_SERVER_ERROR;
+			return new ResponseEntity<VisualizePost>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -79,10 +79,9 @@ public class ControllerRest {
 	public ResponseEntity<List<VisualizePost>> vediTuttiPost(@RequestBody Utente u){
 		try {
 			// controllo login
-			HttpStatus status = utenteService.login(u.getNickname(), u.getPassword());
-
-			// utente autenticato
-			if(status == HttpStatus.OK) {
+			
+			if(utenteService.login(u.getNickname(), u.getPassword()).getStatusCode() == HttpStatus.OK) {
+				// utente autenticato
 				return postService.vediTuttiPost();
 			}else {
 				return new ResponseEntity<List<VisualizePost>>(HttpStatus.BAD_REQUEST);
@@ -96,11 +95,10 @@ public class ControllerRest {
 	@PostMapping(path = "/vediPostUtente")
 	public ResponseEntity<List<VisualizePost>> vediPostUtente(@RequestBody Utente u){
 		try {
+			
 			// controllo login
-			HttpStatus status = utenteService.login(u.getNickname(), u.getPassword());
-
-			// utente autenticato
-			if(status == HttpStatus.OK) {
+			if(utenteService.login(u.getNickname(), u.getPassword()).getStatusCode() == HttpStatus.OK) {				
+				// utente autenticato
 				return postService.vediPostUtente(u);
 			}else {
 				return new ResponseEntity<List<VisualizePost>>(HttpStatus.BAD_REQUEST);
@@ -114,11 +112,10 @@ public class ControllerRest {
 	@PostMapping(path = "/vediPostInRange")
 	public ResponseEntity<List<VisualizePost>> vediPostInRange(@RequestBody PostInRange p){
 		try {
-			// controllo login
-			HttpStatus status = utenteService.login(p.getNickname(), p.getPassword());
 
-			// utente autenticato
-			if(status == HttpStatus.OK) {
+			// controllo login
+			if(utenteService.login(p.getNickname(), p.getPassword()).getStatusCode() == HttpStatus.OK) {
+				// utente autenticato
 				return postService.vediPostInRange(p.getDataInizio(), p.getDataFine());
 			}else {
 				return new ResponseEntity<List<VisualizePost>>(HttpStatus.BAD_REQUEST);
@@ -135,10 +132,8 @@ public class ControllerRest {
 	public ResponseEntity<List<VisualizePost>> vediPostInRangeUtente(@RequestBody PostInRange p){
 		try {
 			// controllo login
-			HttpStatus status = utenteService.login(p.getNickname(), p.getPassword());
-
-			// utente autenticato
-			if(status == HttpStatus.OK) {
+			if(utenteService.login(p.getNickname(), p.getPassword()).getStatusCode() == HttpStatus.OK) {
+				// utente autenticato
 				return postService.vediPostInRangeUtente(p);
 			}else {
 				return new ResponseEntity<List<VisualizePost>>(HttpStatus.BAD_REQUEST);
@@ -155,10 +150,8 @@ public class ControllerRest {
 	public ResponseEntity<List<VisualizePost>> cercaTitoloTestoInPost(@RequestBody SearchPost sp){
 		try {
 			// controllo login
-			HttpStatus status = utenteService.login(sp.getNickname(), sp.getPassword());
-
 			// utente autenticato
-			if(status == HttpStatus.OK) {
+			if(utenteService.login(sp.getNickname(), sp.getPassword()).getStatusCode() == HttpStatus.OK) {
 				return postService.cercaTitoloTestoInPost(sp.getTitolo(),sp.getTesto());
 			}else {
 				return new ResponseEntity<List<VisualizePost>>(HttpStatus.BAD_REQUEST);
@@ -174,10 +167,9 @@ public class ControllerRest {
 	public ResponseEntity<List<VisualizePost>> cercaTitoloTestoInPostUtente(@RequestBody SearchPost sp){
 		try {
 			// controllo login
-			HttpStatus status = utenteService.login(sp.getNickname(), sp.getPassword());
 
-			// utente autenticato
-			if(status == HttpStatus.OK) {
+			if(utenteService.login(sp.getNickname(), sp.getPassword()).getStatusCode() == HttpStatus.OK) {
+				// utente autenticato
 				return postService.cercaTitoloTestoInPostUtente(sp);
 			}else {
 				return new ResponseEntity<List<VisualizePost>>(HttpStatus.BAD_REQUEST);
@@ -185,79 +177,76 @@ public class ControllerRest {
 
 		}catch(Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<List<VisualizePost>>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<List<VisualizePost>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@PatchMapping(path = "/modificaPost", consumes = "application/json")
-	public HttpStatus modificaPost(@RequestBody PatchPost pp) {
+	public ResponseEntity<VisualizePost> modificaPost(@RequestBody PatchPost pp) {
 		try {
 			// controllo login
-			HttpStatus status = utenteService.login(pp.getNickname(),pp.getPassword());
 
-			if(status == HttpStatus.OK) {
+			if(utenteService.login(pp.getNickname(),pp.getPassword()).getStatusCode() == HttpStatus.OK) {
+				//se utente autenticato
 				return postService.modificaPost(pp);
 			}else {
-				return HttpStatus.BAD_REQUEST;
+				return new ResponseEntity<VisualizePost>(HttpStatus.BAD_REQUEST);
 			}
 
 		}catch(Exception e) {
 			e.printStackTrace();
-			return HttpStatus.INTERNAL_SERVER_ERROR;
+			return new ResponseEntity<VisualizePost>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@DeleteMapping(path ="/eliminaPost")
-	public HttpStatus eliminaPost(@RequestBody PostDTO dp) {
+	public ResponseEntity<VisualizePost> eliminaPost(@RequestBody PostDTO dp) {
 		try {
 			// validazione utente
-			HttpStatus status = utenteService.login(dp.getNickname(), dp.getPassword());
-			
-			if(status == HttpStatus.OK) {
+			if(utenteService.login(dp.getNickname(), dp.getPassword()).getStatusCode() == HttpStatus.OK) {
+				//se utente autenticato
 				return postService.eliminaPost(dp);
 			}else {
-				return HttpStatus.BAD_REQUEST;
+				return new ResponseEntity<VisualizePost>(HttpStatus.BAD_REQUEST);
 			}
 			
 		}catch(Exception e) {
 			e.printStackTrace();
-			return HttpStatus.INTERNAL_SERVER_ERROR;
+			return new ResponseEntity<VisualizePost>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@PostMapping(path = "/miPiace")
-	public HttpStatus miPiace(@RequestBody PostDTO pd) {
+	public ResponseEntity<VisualizePost> miPiace(@RequestBody PostDTO pd) {
 		try {
 			// validazione utente
-			HttpStatus status = utenteService.login(pd.getNickname(), pd.getPassword());
-			System.out.println();
-			if(status == HttpStatus.OK) {
+			if(utenteService.login(pd.getNickname(), pd.getPassword()).getStatusCode() == HttpStatus.OK) {
+				//se utente autenticato
 				return postService.mettiLike(pd);
 			}else {
-				return HttpStatus.BAD_REQUEST;
+				return new ResponseEntity<VisualizePost>(HttpStatus.BAD_REQUEST);
 			}
 			
 		}catch(Exception e) {
 			e.printStackTrace();
-			return HttpStatus.INTERNAL_SERVER_ERROR;
+			return new ResponseEntity<VisualizePost>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@PostMapping(path = "/nonMiPiace")
-	public HttpStatus nonMiPiace(@RequestBody PostDTO pd) {
+	public ResponseEntity<VisualizePost> nonMiPiace(@RequestBody PostDTO pd) {
 		try {
 			// validazione utente
-			HttpStatus status = utenteService.login(pd.getNickname(), pd.getPassword());
-			
-			if(status == HttpStatus.OK) {
+			if(utenteService.login(pd.getNickname(), pd.getPassword()).getStatusCode() == HttpStatus.OK) {
+				//se utente autenticato
 				return postService.mettiDislike(pd);
 			}else {
-				return HttpStatus.BAD_REQUEST;
+				return new ResponseEntity<VisualizePost>(HttpStatus.BAD_REQUEST);
 			}
 			
 		}catch(Exception e) {
 			e.printStackTrace();
-			return HttpStatus.INTERNAL_SERVER_ERROR;
+			return new ResponseEntity<VisualizePost>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }
