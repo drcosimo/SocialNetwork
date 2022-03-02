@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Post } from 'src/post';
 import { CentralServiceService } from '../services/central-service.service';
@@ -8,13 +8,14 @@ import { CentralServiceService } from '../services/central-service.service';
   templateUrl: './visualizza-post.component.html',
   styleUrls: ['./visualizza-post.component.css']
 })
-export class VisualizzaPostComponent implements OnInit {
+  export class VisualizzaPostComponent implements OnInit,DoCheck {
 
   constructor(private service: CentralServiceService) { }
 
   // lista di post
   posts: Post[] = [];
   getSub!: Subscription;
+  messaggio !: string|undefined;
 
   ngOnInit(): void {
     this.getSub = this.service.getPost().subscribe(
@@ -26,8 +27,17 @@ export class VisualizzaPostComponent implements OnInit {
       }, (error) => (console.trace(error))
     );
   }
+
+  ngDoCheck():void{
+    if(this.messaggio == ""){
+      this.messaggio = this.service.messaggio;
+    }else{
+      this.messaggio = "";      
+    }
+  }
+
   ngOnDestroy(): void {
-    // mi disiscrivo dal metodo per rilevare memoria
+    // mi disiscrivo dal metodo per liberare memoria
     if (this.getSub) {
       this.getSub.unsubscribe();
     }

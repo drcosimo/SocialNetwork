@@ -1,1 +1,12 @@
-<p>pubblica-post works!</p>
+<form [formGroup]="formCreaPost" (ngSubmit)="creaPost()">
+    <div class="mb-3">
+      <label for="titolo" class="form-label">titolo</label>
+      <input type="titolo" class="form-control" id="titolo"  formControlName="titolo">
+     </div>
+     <div class="mb-3">
+        <label for="testo" class="form-label">testo</label>
+        <input type="titolo" class="form-control" id="testo"  formControlName="testo">
+     </div>
+     <div>{{messaggio}}</div>
+       <button type="submit" class="btn btn-primary">Submit</button>
+  </form>

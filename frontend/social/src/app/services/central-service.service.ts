@@ -1,30 +1,34 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { Post } from 'src/post';
 import { User } from 'src/user';
+import { VisualizeUser } from 'src/VisualizeUser';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CentralServiceService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private router: Router) { }
 
   // placeholder per l'utente
   user :User= {
-     nickname : '',
-    password : ''
-  };
+    nickname:"",
+    password:""
+  }
+
+  messaggio:string = "";
 
   login(cred : User){
     // salvo le credenziali
     this.setUser(cred);
-    return this.http.post<User>('http://localhost:8080/login', cred, {observe:"response"});
+    return this.http.post<VisualizeUser>('http://localhost:8080/login', cred, {observe:"response"});
   }
 
   // salvo le credenziali
-  setUser(user:User|null){
+  setUser(user:User){
     if(user != null){
       this.user.nickname = user.nickname;
       this.user.password = user.password;
@@ -33,8 +37,38 @@ export class CentralServiceService {
 
   // ottengo tutti i post
   getPost(){
-    const bodyReq = {"nickname": this.user.nickname, "password": this.user.password};
+    if(this.user.nickname != "" && this.user.password != ""){
+      const bodyReq = {nickname: this.user.nickname, password: this.user.password};
 
-    return this.http.post<Post []>('http://localhost:8080/vediTuttiPost',bodyReq,{observe:"response"});
+      return this.http.post<Post []>('http://localhost:8080/vediTuttiPost',bodyReq,{observe:"response"});
+    }else{
+      this.router.navigateByUrl("login");
+    }
+  }
+
+  // ottengo tutti i post associati ad un utente
+  getPostUser(){
+    if(this.user.nickname != "" && this.user.password != ""){
+      const bodyReq = {nickname: this.user.nickname, password: this.user.password};
+  
+      return this.http.post<Post []>('http://localhost:8080/vediPostUtente',bodyReq,{observe:"response"});
+    }else{
+        this.router.navigateByUrl("login");
+      }
+  }
+
+  // creazione di un nuovo post
+  creaPost(post :{titolo:string,testo:string}){
+    if(this.user.nickname != "" && this.user.password != ""){
+    const bodyReq = {nickname: this.user.nickname, password : this.user.password,titolo:post.titolo,testo:post.testo};
+
+    return this.http.post<Post>('http://localhost:8080/creaPost',bodyReq,{observe:"response"});
+    }else{
+      this.router.navigateByUrl("login");
+    }
+  }
+
+  setMessaggio(mex:string){
+    this.messaggio = mex;
   }
 }

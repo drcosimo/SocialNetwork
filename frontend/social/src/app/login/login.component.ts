@@ -14,8 +14,11 @@ export class LoginComponent implements OnInit {
 
   constructor(private router: Router, private service: CentralServiceService) { }
   formLogin !: FormGroup;
-  errore!: string;
-
+  errore: string ="";
+  cred:User = {
+    "nickname":"",
+    "password":""
+  }
   ngOnInit(): void {
     this.formLogin = new FormGroup({
       nickname: new FormControl('', Validators.required),
@@ -25,22 +28,22 @@ export class LoginComponent implements OnInit {
 
   login() {
     // salvo le credenziali dal form  
-    const cred = {
+    this.cred= {
       nickname: this.formLogin.get('nickname')?.value,
       password: this.formLogin.get('password')?.value
     }
     // effettuo la richiesta al servizio rest per la validazione delle credenziali
-    this.service.login(cred).subscribe(
-      response => { 
+    this.service.login(this.cred).subscribe(
+      (next)=> { 
         // se il login avviene con successo
-        if (response.status == 200) {
+        if (next.status == 200) {
           // accedo alla homepage
           this.router.navigateByUrl('private');
-        // altrimenti messaggio di errore
-        } else {
-          this.errore = "credenziali invalide";
         }
-        
+      },
+      (error) => {
+        // visualizzo errore
+        this.errore = "credenziali invalide";
       }
     );
   }

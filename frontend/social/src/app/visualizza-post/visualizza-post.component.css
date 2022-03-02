@@ -1,0 +1,49 @@
+body {
+    margin: 40px;
+  }
+  
+  .sidebar {
+      grid-area: sidebar;
+      width: 20%;
+      align-content: center;
+      float: left;
+    }
+  
+    .content {
+      grid-area: content;
+      align-content: right;
+      float: left;
+      width: 75%;
+    }
+  
+    .header {
+      grid-area: header;
+      text-align: center;
+    }
+  
+    .footer {
+      grid-area: footer;
+    }
+  
+  
+    .wrapper {
+      width: 100%;
+      background-color: #fff;
+      color: rgb(240, 8, 8);
+      height: 400px;
+    }
+  
+  
+  .box {
+    background-color: rgb(27, 61, 24);
+    color: #fff;
+    border-radius: 15px;
+    padding: 10px;
+    font-size: 150%;
+    margin: 1%;
+  }
+  
+  .header,
+  .footer {
+    background-color: rgb(110, 0, 0);
+  }

@@ -25,6 +25,10 @@ const routes: Routes = [{
     {
       path: "**",
       component: VisualizzaPostComponent
+    },
+    {
+      path:"pubblicaPost/:messaggio",
+      component : HomepageComponent
     }
   ]
 }]

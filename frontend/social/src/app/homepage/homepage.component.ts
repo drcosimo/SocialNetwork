@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Post } from 'src/post';
 import { CentralServiceService } from '../services/central-service.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-homepage',
@@ -15,7 +16,7 @@ export class HomepageComponent implements OnInit {
   // lista di post
   posts: Post[] = [];
   getSub!: Subscription;
-
+  
   ngOnInit(): void {
   }
   ngOnDestroy(): void{
