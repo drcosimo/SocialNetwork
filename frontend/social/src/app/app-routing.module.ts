@@ -4,6 +4,7 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { LoginComponent } from './login/login.component';
 import { ProfiloComponent } from './profilo/profilo.component';
 import { PubblicaPostComponent } from './pubblica-post/pubblica-post.component';
+import { RegistrazioneComponent } from './registrazione/registrazione.component';
 import { VisualizzaPostComponent } from './visualizza-post/visualizza-post.component';
 
 const routes: Routes = [
@@ -22,6 +23,10 @@ const routes: Routes = [
     redirectTo: 'login',
     // applica questa regola solo quando il percorso è esattamente stringa vuota
     pathMatch: 'full'
+  },
+  {
+    path:'registrazione',
+    component:RegistrazioneComponent
   }
 ];
 

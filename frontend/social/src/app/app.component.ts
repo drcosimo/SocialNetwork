@@ -11,11 +11,15 @@ import { CentralServiceService } from './services/central-service.service';
 export class AppComponent {
   posts: Post[] = [];
 
-  private getSub !: Subscription;
+  public vaiALogin :boolean=true;
 
   constructor(private central:CentralServiceService){
   }
 
   ngOnInit(): void{
+  }
+
+  redirect(){
+    this.vaiALogin = !this.vaiALogin;
   }
 }

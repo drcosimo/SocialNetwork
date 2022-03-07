@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { Post } from 'src/post';
+import { RegistraUser } from 'src/registraUser';
 import { User } from 'src/user';
 import { VisualizeUser } from 'src/VisualizeUser';
 
@@ -68,7 +69,21 @@ export class CentralServiceService {
     }
   }
 
+  // registrazione nuovo utente
+  registrazione(user:RegistraUser){
+    return this.http.post<RegistraUser>('http://localhost:8080/registrazione',user,{observe:"response"});
+  }
+
   setMessaggio(mex:string){
     this.messaggio = mex;
   }
+  
+  like(idPost:number){
+    return this.http.post<Post>('http://localhost:8080/miPiace',{id:idPost,nickname:this.user.nickname, password:this.user.password}, {observe:"response"});
+  }
+
+  dislike(idPost:number){
+    return this.http.post<Post>('http://localhost:8080/nonMiPiace',{id:idPost,nickname:this.user.nickname, password:this.user.password}, {observe:"response"});
+  }
+    
 }

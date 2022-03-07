@@ -1,3 +1,9 @@
 <div class="container-fluid">
   <router-outlet></router-outlet>
+  <div *ngIf="vaiALogin">
+    <button class="btn btn-primary" routerLink='/registrazione' (click)="redirect()">registrati</button>
+  </div>
+  <div *ngIf="!vaiALogin">
+    <button class="btn btn-primary" routerLink='/login' (click)="redirect()">login</button>  
+  </div>
 </div>

@@ -1,0 +1,34 @@
+<form [formGroup]="formRegistrazione" (ngSubmit)="registrazione()">
+    <div class="mb-3">
+      <label for="nicknameInput" class="form-label">nickname</label>
+      <input type="text" class="form-control" id="nickname" formControlName="nickname">
+      </div>
+      <div class="mb-3">
+        <label for="nicknameInput" class="form-label">nome</label>
+        <input type="text" class="form-control" id="nome" formControlName="nome">
+    </div>
+    <div class="mb-3">
+        <label for="nicknameInput" class="form-label">cognome</label>
+        <input type="text" class="form-control" id="cognome" formControlName="cognome">
+        </div>
+        <div class="mb-3">
+      <label for="nicknameInput" class="form-label">data di nascita</label>
+      <input type="date" class="form-control" id="dataNascita" formControlName="dataNascita">
+      </div>
+      <div class="mb-3">
+        <label for="nicknameInput" class="form-label">email</label>
+        <input type="text" class="form-control" id="email" formControlName="email">
+        </div>
+        
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" formControlName="password">
+    </div>
+    <button type="submit" class="btn btn-primary">registrati</button>
+  </form>
+  <p>Hai già un account?</p>
+  <div class="row">
+    <div class="col-12">
+      <b style="color:red">{{errore}}</b>
+    </div>
+  </div>

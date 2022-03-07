@@ -17,6 +17,11 @@ import { CentralServiceService } from '../services/central-service.service';
   getSub!: Subscription;
   messaggio !: string|undefined;
 
+  // controllo appartenenza al post
+  confrontaUtenti(nickname:string):boolean{
+    return this.service.user.nickname == nickname;
+  }
+
   ngOnInit(): void {
     this.getSub = this.service.getPost().subscribe(
       // salvo i dati quando vengono ottenuti dalla chiamata
@@ -27,7 +32,7 @@ import { CentralServiceService } from '../services/central-service.service';
       }, (error) => (console.trace(error))
     );
   }
-
+  
   ngDoCheck():void{
     if(this.messaggio == ""){
       this.messaggio = this.service.messaggio;
@@ -36,10 +41,41 @@ import { CentralServiceService } from '../services/central-service.service';
     }
   }
 
+  aggiornaPost(){
+    this.getSub = this.service.getPost().subscribe(
+      // salvo i dati quando vengono ottenuti dalla chiamata
+      (data) => {
+        if (data.body != null && data.status == 200) {
+          this.posts = data.body;
+        }
+      }, (error) => (console.trace(error))
+    );
+  }
+
   ngOnDestroy(): void {
     // mi disiscrivo dal metodo per liberare memoria
     if (this.getSub) {
       this.getSub.unsubscribe();
     }
+  }
+
+  mettiLike(post:Post){
+    this.service.like(post.id).subscribe(
+      (next)=> {
+        if(next.status == 200){
+          this.aggiornaPost();
+        }
+      }
+    )
+  }
+
+  mettiDislike(post:Post){
+    this.service.dislike(post.id).subscribe(
+      (next)=> {
+        if(next.status == 200){
+          this.aggiornaPost();
+        }
+      }
+    )
   }
 }

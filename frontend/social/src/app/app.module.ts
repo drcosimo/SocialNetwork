@@ -10,6 +10,7 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { VisualizzaPostComponent } from './visualizza-post/visualizza-post.component';
 import { PubblicaPostComponent } from './pubblica-post/pubblica-post.component';
 import { ProfiloComponent } from './profilo/profilo.component';
+import { RegistrazioneComponent } from './registrazione/registrazione.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ProfiloComponent } from './profilo/profilo.component';
     HomepageComponent,
     VisualizzaPostComponent,
     PubblicaPostComponent,
-    ProfiloComponent
+    ProfiloComponent,
+    RegistrazioneComponent
   ],
   imports: [
     BrowserModule,
